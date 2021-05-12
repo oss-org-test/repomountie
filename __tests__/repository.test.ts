@@ -35,8 +35,8 @@ import {
   addWordsMatterIfRequire,
   doesContentHaveLifecycleBadge,
   fixDeprecatedComplianceStatus,
-
-  remindInactiveRepository, requestLifecycleBadgeIfRequired
+  remindInactiveRepository,
+  requestLifecycleBadgeIfRequired
 } from '../src/libs/repository';
 import { getDaysPassed, loadTemplate } from '../src/libs/utils';
 import helper from './src/helper';
