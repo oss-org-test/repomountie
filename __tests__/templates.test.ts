@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-// Created by Jason Leach on 2018-10-02.
+// Created by Jon Langlois on 2021-05-12.
 //
 
 import template from 'lodash/template';
