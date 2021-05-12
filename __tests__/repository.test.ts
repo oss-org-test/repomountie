@@ -18,13 +18,15 @@
 
 import fs from 'fs';
 import yaml from 'js-yaml';
+import template from 'lodash/template';
 import path from 'path';
 import { Context } from 'probot';
+import { INACTIVE_DAYS } from '../src/constants';
 import {
   addFileViaPullRequest,
   checkIfRefExists,
   fetchFileContent,
-  hasPullRequestWithTitle,
+  hasPullRequestWithTitle
 } from '../src/libs/ghutils';
 import {
   addLicenseIfRequired,
@@ -33,11 +35,10 @@ import {
   addWordsMatterIfRequire,
   doesContentHaveLifecycleBadge,
   fixDeprecatedComplianceStatus,
-  requestLifecycleBadgeIfRequired,
-  remindInactiveRepository,
+
+  remindInactiveRepository, requestLifecycleBadgeIfRequired
 } from '../src/libs/repository';
-import { loadTemplate, getDaysPassed } from '../src/libs/utils';
-import { INACTIVE_DAYS } from '../src/constants';
+import { getDaysPassed, loadTemplate } from '../src/libs/utils';
 import helper from './src/helper';
 
 // const p0 = path.join(__dirname, 'fixtures/context-no-lic.json');
@@ -562,6 +563,19 @@ describe('Repository management', () => {
     expect(github.search.issuesAndPullRequests).toBeCalled();
     expect(loadTemplate).not.toBeCalled();
     expect(github.issues.create).not.toBeCalled();
+  });
+
+  it('Loads the expected template for inactive repository issues', async () => {
+    const inactiveIssueText = fs.readFileSync(
+      'templates/inactive_repo_reminder.md',
+      'utf-8'
+    );
+    expect(
+      template(inactiveIssueText)({
+        daysInactive: 1,
+        daysInactiveLimit: 2,
+      })
+    ).toMatchSnapshot();
   });
 });
 
