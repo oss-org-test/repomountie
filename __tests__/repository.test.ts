@@ -18,7 +18,6 @@
 
 import fs from 'fs';
 import yaml from 'js-yaml';
-import template from 'lodash/template';
 import path from 'path';
 import { Context } from 'probot';
 import {
@@ -34,11 +33,11 @@ import {
   addWordsMatterIfRequire,
   doesContentHaveLifecycleBadge,
   fixDeprecatedComplianceStatus,
-  remindInactiveRepository,
   requestLifecycleBadgeIfRequired,
+  remindInactiveRepository,
 } from '../src/libs/repository';
-import { getDaysPassed, loadTemplate } from '../src/libs/utils';
-import { INACTIVE_DAYS, TEXT_FILES } from '../src/constants';
+import { loadTemplate, getDaysPassed } from '../src/libs/utils';
+import { INACTIVE_DAYS } from '../src/constants';
 import helper from './src/helper';
 
 // const p0 = path.join(__dirname, 'fixtures/context-no-lic.json');
@@ -563,16 +562,6 @@ describe('Repository management', () => {
     expect(github.search.issuesAndPullRequests).toBeCalled();
     expect(loadTemplate).not.toBeCalled();
     expect(github.issues.create).not.toBeCalled();
-  });
-
-  it('Loads the expected template for inactive repository issues', async () => {
-    const inactiveIssueText: string = await loadTemplate(TEXT_FILES.INACTIVE_REPO);
-    expect(
-      template(inactiveIssueText)({
-        daysInactive: 1,
-        daysInactiveLimit: 2,
-      })
-    ).toMatchSnapshot();
   });
 });
 
