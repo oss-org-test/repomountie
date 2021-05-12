@@ -21,12 +21,11 @@ import yaml from 'js-yaml';
 import template from 'lodash/template';
 import path from 'path';
 import { Context } from 'probot';
-import { INACTIVE_DAYS } from '../src/constants';
 import {
   addFileViaPullRequest,
   checkIfRefExists,
   fetchFileContent,
-  hasPullRequestWithTitle
+  hasPullRequestWithTitle,
 } from '../src/libs/ghutils';
 import {
   addLicenseIfRequired,
@@ -36,9 +35,10 @@ import {
   doesContentHaveLifecycleBadge,
   fixDeprecatedComplianceStatus,
   remindInactiveRepository,
-  requestLifecycleBadgeIfRequired
+  requestLifecycleBadgeIfRequired,
 } from '../src/libs/repository';
 import { getDaysPassed, loadTemplate } from '../src/libs/utils';
+import { INACTIVE_DAYS } from '../src/constants';
 import helper from './src/helper';
 
 // const p0 = path.join(__dirname, 'fixtures/context-no-lic.json');
@@ -565,7 +565,7 @@ describe('Repository management', () => {
     expect(github.issues.create).not.toBeCalled();
   });
 
-  it('Loads the expected template for inactive repository issues', async () => {
+  it('Loads the expected template for inactive repository issues', () => {
     const inactiveIssueText = fs.readFileSync(
       'templates/inactive_repo_reminder.md',
       'utf-8'
