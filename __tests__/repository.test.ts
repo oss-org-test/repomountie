@@ -38,7 +38,7 @@ import {
   requestLifecycleBadgeIfRequired,
 } from '../src/libs/repository';
 import { getDaysPassed, loadTemplate } from '../src/libs/utils';
-import { INACTIVE_DAYS } from '../src/constants';
+import { INACTIVE_DAYS, TEXT_FILES } from '../src/constants';
 import helper from './src/helper';
 
 // const p0 = path.join(__dirname, 'fixtures/context-no-lic.json');
@@ -565,11 +565,8 @@ describe('Repository management', () => {
     expect(github.issues.create).not.toBeCalled();
   });
 
-  it('Loads the expected template for inactive repository issues', () => {
-    const inactiveIssueText = fs.readFileSync(
-      'templates/inactive_repo_reminder.md',
-      'utf-8'
-    );
+  it('Loads the expected template for inactive repository issues', async () => {
+    const inactiveIssueText: string = await loadTemplate(TEXT_FILES.INACTIVE_REPO);
     expect(
       template(inactiveIssueText)({
         daysInactive: 1,
