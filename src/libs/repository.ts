@@ -27,7 +27,6 @@ import {
   BRANCHES,
   COMMIT_FILE_NAMES,
   COMMIT_MESSAGES,
-  ONE_DAY,
   INACTIVE_DAYS,
   ISSUE_TITLES,
   MINISTRY_SHORT_CODES,
@@ -473,13 +472,8 @@ export const remindInactiveRepository = async (
       return;
     }
 
-    // see https://docs.github.com/en/github/searching-for-information-on-github/searching-issues-and-pull-requests#search-by-when-an-issue-or-pull-request-was-created-or-last-updated
-    const timeSearchFrom = new Date().getTime() - ONE_DAY * INACTIVE_DAYS;
-    const timeSearchFromAsISO = new Date(timeSearchFrom).toISOString();
-
-    // If there is an open/closed dormant repo issue, do not create another one.
-    // The query makes sure that it only checkes the issues created within the "inactive period".
-    const query = `repo:${owner}/${repo} is:issue author:app/${BOT_NAME} created:>${timeSearchFromAsISO} "${ISSUE_TITLES.INACTIVE_REPO}"`;
+    // If there is an open dormant repo issue, do not create another one.
+    const query = `repo:${owner}/${repo} is:issue author:app/${BOT_NAME} is:open "${ISSUE_TITLES.INACTIVE_REPO}"`;
     const issuesResponse = await context.github.search.issuesAndPullRequests({
       order: 'desc',
       per_page: 100,
